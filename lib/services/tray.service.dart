@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:system_tray/system_tray.dart';
 import 'package:window_manager/window_manager.dart';
 
