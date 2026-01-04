@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'services/window.service.dart';
 import 'services/tray.service.dart';
 import 'services/hotkey.service.dart';
+import 'services/recorder.service.dart'; // Import the new service
 import 'ui/home_screen.dart';
 
 void main() async {
@@ -9,13 +10,21 @@ void main() async {
 
   // Initialize Services
   await WindowService.init();
-  await TrayService().init();
+  final trayService = TrayService();
+  await trayService.init();
+
+  final recorderService = RecorderService();
+  await recorderService.init();
 
   await HotkeyService().init(
-    onTrigger: () {
-      debugPrint("Hotkey pressed!");
-      WindowService.show();
-      WindowService.focus();
+    onTrigger: () async {
+      debugPrint("Hotkey pressed! Toggling recording...");
+
+      // Toggle recording
+      await recorderService.toggleRecording();
+
+      // Update Tray Icon based on new state
+      await trayService.setRecordingState(recorderService.isRecording);
     },
   );
 

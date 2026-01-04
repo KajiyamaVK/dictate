@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:system_tray/system_tray.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -7,7 +8,7 @@ class TrayService {
   Future<void> init() async {
     await _systemTray.initSystemTray(
       title: "AI Dictate",
-      iconPath: 'assets/app_icon.png',
+      iconPath: _getIconPath(false),
     );
 
     final Menu menu = Menu();
@@ -27,5 +28,14 @@ class TrayService {
         _systemTray.popUpContextMenu();
       }
     });
+  }
+
+  Future<void> setRecordingState(bool isRecording) async {
+    await _systemTray.setImage(_getIconPath(isRecording));
+  }
+
+  String _getIconPath(bool isRecording) {
+    // Ensure you have this second icon in your assets folder!
+    return isRecording ? 'assets/app_icon_mic.png' : 'assets/app_icon.png';
   }
 }
